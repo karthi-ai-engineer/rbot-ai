@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales reports – Test Shop Admin</title>
+<link rel="stylesheet" href="shop.css">
+<style>
+  .report-head { display: flex; align-items: center; justify-content: space-between; position: relative; }
+  /* deliberately poor control: tiny, low contrast, no role, no accessible name */
+  .kebab { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+           border-radius: 4px; }
+  .kebab:hover { background: #eef0f5; }
+  .menu { position: absolute; right: 0; top: 30px; z-index: 20; background: #fff; border: 1px solid #d7dbe4;
+          border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.16); padding: 4px; }
+  .menu canvas { display: block; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  .bars { display: flex; align-items: flex-end; gap: 10px; height: 120px; margin-top: 18px; }
+  .bars div { flex: 1; background: #b9cdfa; border-radius: 4px 4px 0 0; }
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); background: #1d2330; color: #fff;
+           padding: 10px 18px; border-radius: 8px; z-index: 90; }
+</style>
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span> <span class="small muted" style="color:var(--muted)">Admin</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="index.html">Home</a><a href="stuck.html">Reports</a><a href="welcome.html">Account</a>
+  </nav>
+</div></header>
+
+<main>
+  <h1>Sales reports</h1>
+  <p class="muted">Monthly performance for your store.</p>
+  <p id="downloads" role="status" aria-live="polite"
+     style="font-weight:600;background:#fff;border:1px dashed #b9c2d6;border-radius:8px;padding:8px 12px;display:inline-block">Downloads this session: 0</p>
+
+  <div class="card" style="margin-top:16px">
+    <div class="report-head">
+      <h2 style="margin:0">Monthly sales report – November 2026</h2>
+      <div class="kebab" id="kebab" aria-hidden="true">
+        <svg width="4" height="16" viewBox="0 0 4 16" aria-hidden="true"><circle cx="2" cy="2" r="1.6" fill="#b8bcc6"/><circle cx="2" cy="8" r="1.6" fill="#b8bcc6"/><circle cx="2" cy="14" r="1.6" fill="#b8bcc6"/></svg>
+      </div>
+      <div class="menu hidden" id="menu" aria-hidden="true"><canvas id="menu-canvas" width="210" height="114"></canvas></div>
+    </div>
+    <div class="bars" aria-hidden="true">
+      <div style="height:40%"></div><div style="height:55%"></div><div style="height:48%"></div><div style="height:70%"></div>
+      <div style="height:62%"></div><div style="height:85%"></div><div style="height:78%"></div><div style="height:92%"></div>
+    </div>
+    <table aria-label="Sales by category">
+      <thead><tr><th>Category</th><th>Orders</th><th>Revenue</th></tr></thead>
+      <tbody>
+        <tr><td>Mugs</td><td>412</td><td>$8,235.88</td></tr>
+        <tr><td>Teapots</td><td>96</td><td>$3,312.00</td></tr>
+        <tr><td>Plants</td><td>188</td><td>$2,256.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var easy = q.get("easy") === "1";          // easy mode: plain click works and the menu stays open
+  var KEY = "testshop_downloads";
+  function getCount() { try { return +sessionStorage.getItem(KEY) || 0; } catch (e) { return 0; } }
+  function setCount(n) { try { sessionStorage.setItem(KEY, String(n)); } catch (e) {} }
+  if (q.get("reset") === "1") setCount(0);
+
+  var downloads = document.getElementById("downloads");
+  var kebab = document.getElementById("kebab"), menu = document.getElementById("menu");
+  var cv = document.getElementById("menu-canvas"), ctx = cv.getContext("2d");
+  var toast = document.getElementById("toast");
+  var ITEMS = ["Share", "Export as PDF", "Download report"], H = 38;
+  var hover = -1, flash = -1, downAt = 0, downItem = -1, overMenu = false, closeTimer = null;
+
+  function render() { downloads.textContent = "Downloads this session: " + getCount(); }
+  render();
+
+  function draw() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ITEMS.forEach(function (t, i) {
+      if (i === hover) { ctx.fillStyle = "#eef3fe"; ctx.fillRect(0, i * H, cv.width, H); }
+      ctx.fillStyle = "#1d2330"; ctx.font = "14px Segoe UI, Arial"; ctx.textBaseline = "middle";
+      var label = t;
+      if (i === 2 && !easy) label = (flash === 2) ? "Hold to confirm…" : "Download report";
+      ctx.fillText(label, 14, i * H + H / 2);
+    });
+  }
+  function itemAt(e) { var r = cv.getBoundingClientRect(); var i = Math.floor((e.clientY - r.top) / H); return i >= 0 && i < ITEMS.length ? i : -1; }
+
+  function openMenu() {
+    menu.classList.remove("hidden"); hover = -1; draw();
+    clearTimeout(closeTimer);
+    if (!easy) closeTimer = setTimeout(function check() {          // hard mode: closes after 5 s unless hovered
+      if (overMenu) { closeTimer = setTimeout(check, 1000); return; }
+      menu.classList.add("hidden");
+    }, 5000);
+  }
+  function closeMenu() { menu.classList.add("hidden"); clearTimeout(closeTimer); }
+
+  kebab.addEventListener("click", function (e) { e.stopPropagation(); menu.classList.contains("hidden") ? openMenu() : closeMenu(); });
+  document.addEventListener("click", function (e) { if (!menu.contains(e.target)) closeMenu(); });
+  menu.addEventListener("mouseenter", function () { overMenu = true; });
+  menu.addEventListener("mouseleave", function () { overMenu = false; hover = -1; draw(); });
+  cv.addEventListener("mousemove", function (e) { var i = itemAt(e); if (i !== hover) { hover = i; draw(); } });
+  cv.addEventListener("mousedown", function (e) { downAt = Date.now(); downItem = itemAt(e); });
+  cv.addEventListener("mouseup", function (e) {
+    var i = itemAt(e), held = Date.now() - downAt;
+    if (i !== downItem || i < 0) return;
+    if (i !== 2) { showToast(ITEMS[i] + " is not available on this test page."); closeMenu(); return; }
+    if (!easy && held < 700) {                                       // hard mode: press and hold to confirm
+      flash = 2; draw(); setTimeout(function () { flash = -1; draw(); }, 1200); return;
+    }
+    setCount(getCount() + 1); render(); closeMenu();
+    showToast("sales_report_2026-11.csv downloaded (test – no file written)");
+  });
+
+  function showToast(t) { toast.textContent = t; toast.classList.remove("hidden"); clearTimeout(showToast.t);
+    showToast.t = setTimeout(function () { toast.classList.add("hidden"); }, 4000); }
+})();
+</script>
+</body>
+</html>

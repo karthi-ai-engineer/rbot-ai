@@ -1,0 +1,62 @@
+/* Shared look for the local HITL test pages (Test Shop). No external fonts/assets. */
+:root {
+  --bg: #f6f7fb; --card: #ffffff; --ink: #1d2330; --muted: #667085; --line: #e3e6ee;
+  --brand: #2f6fed; --brand-dark: #1f54c4; --ok: #157f3b; --err: #c4321f; --warn: #b26b00;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 "Segoe UI", system-ui, Arial, sans-serif; }
+a { color: var(--brand); }
+
+/* corner label so nobody mistakes these pages for a real site */
+.test-badge {
+  position: fixed; top: 8px; right: 8px; z-index: 9999; background: #ffe8a3; color: #6b4a00;
+  border: 1px solid #e0b84a; border-radius: 6px; padding: 3px 9px; font: 600 12px "Segoe UI", sans-serif;
+  letter-spacing: .3px; box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+
+header.site { background: var(--card); border-bottom: 1px solid var(--line); }
+header.site .inner { max-width: 1040px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; gap: 28px; }
+.logo { font-weight: 700; font-size: 20px; color: var(--ink); text-decoration: none; }
+.logo span { color: var(--brand); }
+nav.main a { margin-right: 18px; color: var(--ink); text-decoration: none; }
+nav.main a:hover { color: var(--brand); }
+
+main { max-width: 1040px; margin: 0 auto; padding: 28px 20px 140px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 28px; }
+.narrow { max-width: 420px; margin: 40px auto; }
+h1 { font-size: 26px; margin: 0 0 6px; }
+h2 { font-size: 20px; margin: 0 0 10px; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+label { display: block; font-weight: 600; margin: 16px 0 6px; }
+input[type=text], input[type=email], input[type=password], input[type=tel], textarea, select {
+  width: 100%; padding: 10px 12px; border: 1px solid #c9cfdb; border-radius: 8px; font: inherit; background: #fff;
+}
+input:focus, textarea:focus, select:focus { outline: 2px solid #9db8f7; border-color: var(--brand); }
+button, .btn {
+  display: inline-block; font: 600 15px "Segoe UI", sans-serif; border-radius: 8px; padding: 10px 18px;
+  border: 1px solid transparent; cursor: pointer; text-decoration: none;
+}
+.btn-primary { background: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-primary:disabled { background: #9aa9c9; cursor: default; }
+.btn-secondary { background: #fff; color: var(--ink); border-color: #c9cfdb; }
+.btn-secondary:hover { background: #f0f2f7; }
+.btn-block { width: 100%; margin-top: 22px; }
+
+.alert { border-radius: 8px; padding: 10px 12px; margin: 14px 0 0; }
+.alert-error { background: #fdecea; color: var(--err); border: 1px solid #f5c2bb; }
+.alert-ok { background: #e7f6ec; color: var(--ok); border: 1px solid #b7e2c4; }
+.alert-info { background: #eef3fe; color: #1f3f8a; border: 1px solid #c8d7fb; }
+.hidden { display: none !important; }
+
+.spinner { width: 22px; height: 22px; border: 3px solid #cfd8ea; border-top-color: var(--brand); border-radius: 50%;
+  animation: spin .8s linear infinite; display: inline-block; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.product { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+.product .img { height: 110px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 46px; }
+footer.site { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }

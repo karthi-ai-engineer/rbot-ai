@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My account – Test Shop</title>
+<link rel="stylesheet" href="shop.css">
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="index.html">Home</a><a href="cookies.html">Blog</a><a href="stuck.html">Reports</a><a href="checkout.html">Cart (1)</a>
+  </nav>
+</div></header>
+
+<main>
+  <div class="card" style="max-width:640px;margin:30px auto">
+    <h1 id="greeting">Welcome back, test user</h1>
+    <p id="how" class="muted">You are signed in.</p>
+
+    <div id="verified" class="alert alert-ok hidden" role="status">Thanks, you're verified. Today's deal: 20% off all mugs with code <b>MUG20</b>.</div>
+
+    <h2 style="margin-top:24px">Recent orders</h2>
+    <table style="width:100%;border-collapse:collapse" aria-label="Recent orders">
+      <thead><tr style="text-align:left;border-bottom:1px solid var(--line)"><th>Order</th><th>Item</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>#TS-1042</td><td>Blue ceramic mug</td><td>Shipped</td></tr>
+        <tr><td>#TS-0987</td><td>Desk plant</td><td>Delivered</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:24px"><a class="btn btn-secondary" href="index.html">Continue shopping</a></p>
+  </div>
+</main>
+<script>
+(function () {
+  var from = new URLSearchParams(location.search).get("from");
+  var how = document.getElementById("how");
+  if (from === "login") how.textContent = "You are signed in.";
+  if (from === "otp") how.textContent = "You are signed in. Your phone number was verified.";
+  if (from === "captcha") {
+    how.textContent = "Verification complete: you passed the human check.";
+    document.getElementById("verified").classList.remove("hidden");
+  }
+})();
+</script>
+</body>
+</html>

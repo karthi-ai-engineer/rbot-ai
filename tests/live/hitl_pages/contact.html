@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us – Test Shop</title>
+<link rel="stylesheet" href="shop.css">
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="index.html">Home</a><a href="cookies.html">Blog</a><a href="contact.html">Contact</a><a href="checkout.html">Cart (1)</a>
+  </nav>
+</div></header>
+
+<main>
+  <div class="card" style="max-width:560px;margin:30px auto">
+    <h1>Contact us</h1>
+    <p class="muted">Questions about an order? Send us a message and we'll reply within one day.</p>
+    <form id="contact-form" novalidate aria-label="Contact form">
+      <label for="name">Your name</label>
+      <input type="text" id="name" name="name" autocomplete="name">
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" autocomplete="email">
+      <label for="subject">Subject</label>
+      <select id="subject" name="subject">
+        <option value="">Choose a subject…</option>
+        <option>Order status</option><option>Returns</option><option>Product question</option><option>Other</option>
+      </select>
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5"></textarea>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:400">
+        <input type="checkbox" id="copy" name="copy"> Send me a copy of this message</label>
+      <div id="error" class="alert alert-error hidden" role="alert"></div>
+      <button type="submit" id="send" class="btn btn-primary btn-block">Send message</button>
+    </form>
+    <div id="sent" class="alert alert-ok hidden" role="status"></div>
+  </div>
+</main>
+<script>
+(function () {
+  var form = document.getElementById("contact-form");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = function (id) { return document.getElementById(id).value.trim(); };
+    var err = document.getElementById("error");
+    if (!v("name") || !v("email") || !v("subject") || !v("message")) {
+      err.textContent = "Please fill in your name, email, subject and message."; err.classList.remove("hidden"); return;
+    }
+    err.classList.add("hidden");
+    form.classList.add("hidden");
+    var sent = document.getElementById("sent");
+    sent.textContent = "Message sent (test). Name: " + v("name") + " · Email: " + v("email") + " · Subject: " + v("subject") +
+                       " · Message: " + v("message");
+    sent.classList.remove("hidden");
+  });
+})();
+</script>
+</body>
+</html>

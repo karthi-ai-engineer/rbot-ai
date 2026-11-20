@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test Shop – Home</title>
+<link rel="stylesheet" href="shop.css">
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="cookies.html">Blog</a>
+    <a href="stuck.html">Reports</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">My account</a>
+    <a href="checkout.html">Cart (1)</a>
+  </nav>
+</div></header>
+
+<main>
+  <h1>Welcome to Test Shop</h1>
+  <p class="muted">A fake local shop used to test the buddy agent's human-in-the-loop behaviour. Nothing here is real:
+    no accounts, no payments, no network.</p>
+
+  <section aria-labelledby="products-h" style="margin-top:22px">
+    <h2 id="products-h">Popular items</h2>
+    <div class="grid">
+      <div class="product"><div class="img" style="background:#e3ecff" aria-hidden="true">☕</div>
+        <h3>Blue ceramic mug</h3><p class="muted">$19.99</p></div>
+      <div class="product"><div class="img" style="background:#ffeede" aria-hidden="true">🫖</div>
+        <h3>Glass teapot</h3><p class="muted">$34.50</p></div>
+      <div class="product"><div class="img" style="background:#e5f7ea" aria-hidden="true">🌱</div>
+        <h3>Desk plant</h3><p class="muted">$12.00</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="scen-h" class="card" style="margin-top:28px">
+    <h2 id="scen-h">Test scenarios</h2>
+    <p class="small muted">Link names are kept neutral on purpose so this index page itself never looks like a
+      sign-in / code / robot-check / banner / card page to the agent's detector.</p>
+    <ul>
+      <li>Scenario 1: <a href="login.html">account page</a> · <a href="login.html?fail=1">account page (fail mode)</a></li>
+      <li>Scenario 2: <a href="otp.html">phone step</a> · <a href="otp.html?hint=1">phone step (with hint)</a></li>
+      <li>Scenario 3: <a href="captcha.html">robot check</a></li>
+      <li>Scenario 4: <a href="cookies.html">blog article (banner)</a> · <a href="cookies.html?perm=1">blog article (browser prompt)</a></li>
+      <li>Scenario 5: <a href="checkout.html">cart</a></li>
+      <li>Scenario 6: <a href="stuck.html">reports (hard)</a> · <a href="stuck.html?easy=1">reports (easy)</a></li>
+      <li>Scenario 7: <a href="contact.html">contact form</a></li>
+      <li>Scenario 8: <a href="welcome.html">account home</a></li>
+    </ul>
+  </section>
+</main>
+<footer class="site">Test Shop is a local test fixture · 127.0.0.1 · no data leaves this computer</footer>
+</body>
+</html>

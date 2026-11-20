@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your cart – Test Shop</title>
+<link rel="stylesheet" href="shop.css">
+<style>
+  .layout { display: grid; grid-template-columns: 1fr 300px; gap: 22px; align-items: start; }
+  .line { display: flex; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .thumb { width: 72px; height: 72px; border-radius: 8px; background: #e3ecff; display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .sum-row { display: flex; justify-content: space-between; margin: 6px 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .secure { font-size: 12px; color: var(--muted); margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="index.html">Home</a><a href="cookies.html">Blog</a><a href="login.html">My account</a><a href="checkout.html">Cart (1)</a>
+  </nav>
+</div></header>
+
+<main>
+  <div class="layout">
+    <div>
+      <!-- step 1: cart -->
+      <section id="step-cart" class="card" aria-labelledby="cart-h">
+        <h1 id="cart-h">Your cart</h1>
+        <div class="line">
+          <div class="thumb" aria-hidden="true">☕</div>
+          <div style="flex:1"><b>Blue ceramic mug</b><div class="small muted">350 ml · dishwasher safe</div></div>
+          <div>Qty 1</div>
+          <div><b>$19.99</b></div>
+        </div>
+        <button type="button" id="to-payment" class="btn btn-primary btn-block">Proceed to payment</button>
+      </section>
+
+      <!-- step 2: payment -->
+      <section id="step-pay" class="card hidden" aria-labelledby="pay-h">
+        <h1 id="pay-h">Payment details</h1>
+        <p class="muted">Enter your card details to complete the purchase.</p>
+        <form id="pay-form" novalidate aria-label="Payment">
+          <label for="cc-number">Card number</label>
+          <input type="text" id="cc-number" name="cc-number" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" maxlength="23">
+          <div class="two">
+            <div><label for="cc-exp">Expiry date (MM/YY)</label>
+              <input type="text" id="cc-exp" name="cc-exp" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5"></div>
+            <div><label for="cc-csc">CVV</label>
+              <input type="text" id="cc-csc" name="cc-csc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" maxlength="4"></div>
+          </div>
+          <label for="cc-name">Name on card</label>
+          <input type="text" id="cc-name" name="cc-name" autocomplete="cc-name" placeholder="Full name">
+          <label for="addr">Billing address</label>
+          <input type="text" id="addr" name="addr" autocomplete="street-address" placeholder="Street and number">
+          <div class="two">
+            <div><label for="city">City</label><input type="text" id="city" name="city" autocomplete="address-level2"></div>
+            <div><label for="zip">Postal code</label><input type="text" id="zip" name="zip" autocomplete="postal-code"></div>
+          </div>
+          <label for="country">Country</label>
+          <select id="country" name="country" autocomplete="country">
+            <option>Japan</option><option>India</option><option>United States</option><option>Germany</option>
+          </select>
+          <div id="pay-error" class="alert alert-error hidden" role="alert"></div>
+          <div id="pay-busy" class="alert alert-info hidden" role="status"><span class="spinner"></span>&nbsp; Processing payment…</div>
+          <button type="submit" id="pay" class="btn btn-primary btn-block">Pay $19.99</button>
+          <p class="secure">🔒 Secure test form · nothing is charged, nothing is sent anywhere</p>
+        </form>
+      </section>
+
+      <!-- step 3: confirmation -->
+      <section id="step-done" class="card hidden" aria-labelledby="done-h">
+        <h1 id="done-h">Order confirmed (TEST – no real payment)</h1>
+        <p>Thank you! Your order <b>#TS-2001</b> for 1 × Blue ceramic mug has been placed.</p>
+        <p class="muted">A confirmation email would be sent to you on a real site.</p>
+        <a class="btn btn-secondary" href="index.html">Back to the shop</a>
+      </section>
+    </div>
+
+    <aside class="card" aria-label="Order summary">
+      <h2>Order summary</h2>
+      <div class="sum-row"><span>Subtotal</span><span>$19.99</span></div>
+      <div class="sum-row"><span>Shipping</span><span>Free</span></div>
+      <div class="sum-row" style="font-weight:700;border-top:1px solid var(--line);padding-top:8px"><span>Total</span><span>$19.99</span></div>
+    </aside>
+  </div>
+</main>
+
+<script>
+(function () {
+  var cart = document.getElementById("step-cart"), pay = document.getElementById("step-pay"), done = document.getElementById("step-done");
+  var err = document.getElementById("pay-error"), busy = document.getElementById("pay-busy"), btn = document.getElementById("pay");
+
+  function show(step, title) {
+    [cart, pay, done].forEach(function (s) { s.classList.toggle("hidden", s !== step); });
+    document.title = title + " – Test Shop";
+    window.scrollTo(0, 0);
+  }
+  document.getElementById("to-payment").addEventListener("click", function () {
+    show(pay, "Payment"); document.getElementById("cc-number").focus();
+  });
+  document.getElementById("pay-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    err.classList.add("hidden");
+    var need = ["cc-number", "cc-exp", "cc-csc", "cc-name"].filter(function (id) { return !document.getElementById(id).value.trim(); });
+    if (need.length) { err.textContent = "Please fill in the card number, expiry date, CVV and name on card."; err.classList.remove("hidden"); return; }
+    btn.disabled = true; busy.classList.remove("hidden");
+    setTimeout(function () { busy.classList.add("hidden"); btn.disabled = false; show(done, "Order confirmed"); }, 1500);
+  });
+})();
+</script>
+</body>
+</html>

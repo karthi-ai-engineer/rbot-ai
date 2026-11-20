@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Just a moment… – Test Shop</title>
+<link rel="stylesheet" href="shop.css">
+<style>
+  .widget { display: flex; align-items: center; justify-content: space-between; width: 320px; height: 78px;
+            border: 1px solid #d3d3d3; border-radius: 4px; background: #f9f9f9; padding: 0 12px;
+            box-shadow: 0 0 4px rgba(0,0,0,.08); margin: 22px 0 0; }
+  .cb-row { display: flex; align-items: center; gap: 12px; }
+  .cb { width: 28px; height: 28px; border: 2px solid #c1c1c1; border-radius: 3px; background: #fff;
+        cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .cb:focus { outline: 2px solid #9db8f7; }
+  .cb.checked { border-color: transparent; color: var(--ok); font-size: 28px; font-weight: 700; }
+  .cb-text { font-size: 15px; }
+  .brand { text-align: center; font-size: 10px; color: #555; line-height: 1.2; }
+  .brand .logo-mark { font-size: 22px; }
+  .challenge { position: relative; width: 400px; margin-top: 10px; background: #fff; border: 1px solid #ccc;
+               box-shadow: 0 4px 16px rgba(0,0,0,.2); border-radius: 4px; }
+  .challenge .head { background: #4a90e2; color: #fff; padding: 18px 16px; }
+  .challenge .head .big { font-size: 22px; font-weight: 700; display: block; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 8px; }
+  .tile { height: 116px; border: 0; border-radius: 0; font-size: 44px; padding: 0; position: relative;
+          transition: transform .1s; }
+  .tile[aria-pressed="true"] { transform: scale(.86); outline: 3px solid #4a90e2; }
+  .tile[aria-pressed="true"]::after { content: "✓"; position: absolute; top: 4px; left: 6px; font-size: 16px;
+          background: #4a90e2; color: #fff; border-radius: 50%; width: 22px; height: 22px; line-height: 22px; }
+  .challenge .foot { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px;
+                     border-top: 1px solid #e5e5e5; }
+  .icon-btn { background: none; border: 0; font-size: 20px; padding: 4px 8px; color: #555; }
+</style>
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span></a>
+</div></header>
+
+<main>
+  <div class="card" style="max-width:520px;margin:40px auto">
+    <h1>Verify you are human</h1>
+    <p class="muted">testshop.local needs to review the security of your connection before proceeding.</p>
+
+    <div class="widget" id="widget">
+      <div class="cb-row">
+        <div class="cb" id="cb" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="cb-text"></div>
+        <span class="cb-text" id="cb-text">I'm not a robot</span>
+      </div>
+      <div class="brand"><div class="logo-mark" aria-hidden="true">🛡️</div>TestCAPTCHA<br><span class="small">Privacy - Terms</span></div>
+    </div>
+
+    <div class="challenge hidden" id="challenge" role="dialog" aria-modal="false" aria-labelledby="ch-title">
+      <div class="head" id="ch-title">Select all squares with <span class="big">traffic lights</span>
+        <span class="small">Click verify once there are none left.</span></div>
+      <div class="tiles" id="tiles" role="group" aria-label="Image challenge"></div>
+      <div id="ch-error" class="small hidden" role="alert" style="color:var(--err);padding:0 12px 6px">Please select all matching images.</div>
+      <div class="foot">
+        <div>
+          <button class="icon-btn" id="reload" type="button" aria-label="Get a new challenge" title="Get a new challenge">⟳</button>
+          <button class="icon-btn" type="button" aria-label="Get an audio challenge" title="Get an audio challenge">🎧</button>
+        </div>
+        <button class="btn btn-primary" id="verify" type="button">Verify</button>
+      </div>
+    </div>
+
+    <p class="small muted" style="margin-top:22px">Protected by TestCAPTCHA (fake). Ray ID: 7f3a-test</p>
+  </div>
+</main>
+
+<script>
+(function () {
+  var cb = document.getElementById("cb");
+  var challenge = document.getElementById("challenge");
+  var tilesBox = document.getElementById("tiles");
+  var chErr = document.getElementById("ch-error");
+  var state = "idle";
+  var SETS = [
+    ["🚦", "🚗", "🌳", "🏠", "🚦", "🚌", "🌳", "🚦", "🚲"],
+    ["🚗", "🚦", "🏢", "🚦", "🌳", "🚕", "🚦", "🏠", "🚌"]
+  ];
+  var BG = ["#cfd8dc", "#b0bec5", "#c8e6c9", "#ffe0b2", "#d7ccc8", "#bbdefb", "#dcedc8", "#cfd8dc", "#f8bbd0"];
+  var setIdx = 0;
+
+  function buildTiles() {
+    tilesBox.innerHTML = "";
+    SETS[setIdx].forEach(function (emo, i) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "tile"; b.textContent = emo;
+      b.style.background = BG[i];
+      b.setAttribute("aria-pressed", "false");
+      b.setAttribute("aria-label", "Image " + (i + 1));
+      b.addEventListener("click", function () {
+        b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true");
+        chErr.classList.add("hidden");
+      });
+      tilesBox.appendChild(b);
+    });
+  }
+
+  function start() {
+    if (state !== "idle") return;
+    state = "spinning";
+    cb.innerHTML = '<span class="spinner" aria-hidden="true"></span>';
+    cb.setAttribute("aria-busy", "true");
+    setTimeout(function () {
+      state = "challenge";
+      cb.innerHTML = ""; cb.removeAttribute("aria-busy");
+      buildTiles();
+      challenge.classList.remove("hidden");
+    }, 1500);
+  }
+
+  cb.addEventListener("click", start);
+  cb.addEventListener("keydown", function (e) { if (e.key === " " || e.key === "Enter") { e.preventDefault(); start(); } });
+  document.getElementById("reload").addEventListener("click", function () { setIdx = (setIdx + 1) % SETS.length; buildTiles(); });
+
+  document.getElementById("verify").addEventListener("click", function () {
+    var picked = tilesBox.querySelectorAll('[aria-pressed="true"]').length;
+    if (!picked) { chErr.classList.remove("hidden"); return; }
+    challenge.classList.add("hidden");
+    state = "done";
+    cb.classList.add("checked"); cb.textContent = "✓";
+    cb.setAttribute("aria-checked", "true");
+    document.getElementById("cb-text").textContent = "Verified";
+    setTimeout(function () { location.href = "welcome.html?from=captcha"; }, 1000);
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7 tips for better coffee at home – Test Shop Blog</title>
+<link rel="stylesheet" href="shop.css">
+<style>
+  article { max-width: 720px; margin: 0 auto; }
+  article h1 { font-size: 32px; line-height: 1.2; }
+  article h2 { margin-top: 26px; }
+  .hero { height: 180px; border-radius: 12px; background: linear-gradient(135deg, #6b4226, #c08552);
+          display: flex; align-items: center; justify-content: center; font-size: 72px; margin: 18px 0; }
+  .choice { font-weight: 600; background: #fff; border: 1px dashed #b9c2d6; border-radius: 8px; padding: 8px 12px; display: inline-block; }
+
+  /* cookie banner + backdrop */
+  .backdrop { position: fixed; inset: 0; background: rgba(15, 20, 30, .45); z-index: 50; }
+  .cookie-banner { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: #fff;
+                   border-top: 1px solid var(--line); box-shadow: 0 -6px 24px rgba(0,0,0,.18); }
+  .cookie-banner .inner { max-width: 1040px; margin: 0 auto; padding: 20px; display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .cookie-banner .text { flex: 1 1 480px; }
+  .cookie-banner .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .prefs { max-width: 1040px; margin: 0 auto; padding: 0 20px 20px; }
+  .prefs label { display: flex; gap: 10px; align-items: center; font-weight: 400; margin: 8px 0; }
+
+  /* browser-like permission prompt (in-page imitation) */
+  .perm { position: fixed; top: 6px; left: 120px; z-index: 70; width: 340px; background: #fff; color: #202124;
+          border: 1px solid #c7c7c7; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.25); padding: 16px 16px 14px; }
+  .perm .origin { font-weight: 600; margin-bottom: 8px; }
+  .perm .what { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .perm .row { display: flex; justify-content: flex-end; gap: 8px; }
+  .perm .x { position: absolute; top: 6px; right: 8px; background: none; border: 0; font-size: 18px; color: #555; padding: 2px 6px; }
+</style>
+</head>
+<body>
+<div class="test-badge" role="note" aria-label="Test page notice">TEST PAGE · local only · no real accounts</div>
+<header class="site"><div class="inner">
+  <a class="logo" href="index.html">Test<span>Shop</span></a>
+  <nav class="main" aria-label="Main">
+    <a href="index.html">Home</a><a href="cookies.html">Blog</a><a href="login.html">My account</a><a href="checkout.html">Cart (1)</a>
+  </nav>
+</div></header>
+
+<main>
+  <article>
+    <p class="small muted">Test Shop Blog · 4 min read</p>
+    <h1>7 tips for brewing better coffee at home</h1>
+    <p id="choice" class="choice" role="status" aria-live="polite">Cookie choice: not chosen yet</p>
+    <div class="hero" aria-hidden="true">☕</div>
+    <p>Great coffee doesn't need an expensive machine. These small habits make the biggest difference.</p>
+
+    <h2>Tip 1: Buy whole beans</h2>
+    <p>Ground coffee goes stale within days. Whole beans keep their aroma for weeks if stored in an airtight jar.</p>
+    <h2>Tip 2: Grind just before brewing</h2>
+    <p>A simple burr grinder gives an even grind, which means an even extraction and less bitterness.</p>
+    <h2>Tip 3: Use filtered water</h2>
+    <p>Coffee is 98% water. If your tap water tastes of chlorine, so will your coffee.</p>
+    <h2>Tip 4: Mind the temperature</h2>
+    <p>Aim for 92–96 °C. Boiling water scorches the grounds; let the kettle rest for 30 seconds.</p>
+    <h2>Tip 5: Weigh your coffee</h2>
+    <p>A ratio of 1:16 (one gram of coffee per sixteen grams of water) is a reliable starting point.</p>
+    <h2>Tip 6: Pre-wet paper filters</h2>
+    <p>Rinsing the filter removes papery flavours and warms up the brewer.</p>
+    <h2>Tip 7: Clean your gear</h2>
+    <p>Old coffee oils turn rancid. Wash your brewer and grinder hopper every week.</p>
+  </article>
+</main>
+<footer class="site">Test Shop Blog · local test fixture</footer>
+
+<!-- cookie consent (default mode) -->
+<div id="backdrop" class="backdrop hidden" aria-hidden="true"></div>
+<div id="cookie-banner" class="cookie-banner hidden" role="dialog" aria-modal="true" aria-labelledby="cookie-title" aria-describedby="cookie-text">
+  <div class="inner">
+    <div class="text">
+      <h2 id="cookie-title" style="font-size:17px;margin:0 0 4px">We value your privacy</h2>
+      <p id="cookie-text" style="margin:0">We use cookies to improve your experience, personalise content and ads, and analyse our traffic.
+        You can accept all cookies, reject the optional ones, or choose which ones to allow. <a href="#">Cookie policy</a></p>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn btn-secondary" id="customize">Customize</button>
+      <button type="button" class="btn btn-secondary" id="reject">Reject all</button>
+      <button type="button" class="btn btn-primary" id="accept">Accept all</button>
+    </div>
+  </div>
+  <div id="prefs" class="prefs hidden" role="group" aria-label="Cookie preferences">
+    <label><input type="checkbox" checked disabled> Strictly necessary (always on)</label>
+    <label><input type="checkbox" id="pref-analytics"> Analytics cookies</label>
+    <label><input type="checkbox" id="pref-marketing"> Marketing cookies</label>
+    <button type="button" class="btn btn-primary" id="save-prefs">Save preferences</button>
+  </div>
+</div>
+
+<!-- notification permission prompt (?perm=1) -->
+<div id="perm" class="perm hidden" role="alertdialog" aria-labelledby="perm-origin" aria-describedby="perm-what">
+  <button type="button" class="x" id="perm-close" aria-label="Close">×</button>
+  <div class="origin" id="perm-origin">testshop.local wants to</div>
+  <div class="what" id="perm-what"><span aria-hidden="true">🔔</span> Show notifications</div>
+  <div class="row">
+    <button type="button" class="btn btn-secondary" id="perm-allow">Allow</button>
+    <button type="button" class="btn btn-secondary" id="perm-block">Block</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var permMode = new URLSearchParams(location.search).get("perm") === "1";
+  var choice = document.getElementById("choice");
+  var banner = document.getElementById("cookie-banner");
+  var backdrop = document.getElementById("backdrop");
+  var perm = document.getElementById("perm");
+
+  function closeBanner(text) {
+    choice.textContent = "Cookie choice: " + text;
+    banner.classList.add("hidden"); backdrop.classList.add("hidden");
+  }
+
+  if (permMode) {
+    choice.textContent = "Notifications: not chosen yet";
+    setTimeout(function () { perm.classList.remove("hidden"); }, 800);
+    function closePerm(text) { choice.textContent = "Notifications: " + text; perm.classList.add("hidden"); }
+    document.getElementById("perm-allow").addEventListener("click", function () { closePerm("allowed"); });
+    document.getElementById("perm-block").addEventListener("click", function () { closePerm("blocked"); });
+    document.getElementById("perm-close").addEventListener("click", function () { closePerm("dismissed (ask again later)"); });
+    return;
+  }
+
+  setTimeout(function () { banner.classList.remove("hidden"); backdrop.classList.remove("hidden"); }, 600);
+  document.getElementById("accept").addEventListener("click", function () { closeBanner("accepted all"); });
+  document.getElementById("reject").addEventListener("click", function () { closeBanner("rejected"); });
+  document.getElementById("customize").addEventListener("click", function () {
+    document.getElementById("prefs").classList.toggle("hidden");
+  });
+  document.getElementById("save-prefs").addEventListener("click", function () {
+    var a = document.getElementById("pref-analytics").checked, m = document.getElementById("pref-marketing").checked;
+    closeBanner("custom (analytics " + (a ? "on" : "off") + ", marketing " + (m ? "on" : "off") + ")");
+  });
+})();
+</script>
+</body>
+</html>

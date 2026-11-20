@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+runs/
+data/
+.buddy_browser/
+.pytest_cache/

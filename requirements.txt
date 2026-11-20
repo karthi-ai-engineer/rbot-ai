@@ -1,0 +1,16 @@
+openai>=2.0
+python-dotenv>=1.0
+ddgs
+langgraph>=1.0
+send2trash
+httpx
+PySide6
+pillow
+mss
+numpy
+psutil
+pynput
+requests
+uiautomation
+websocket-client
+pytest
